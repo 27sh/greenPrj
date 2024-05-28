@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<div th:insert="~{admin/adminHeader.html}" id="header"></div>
+<body>
+<h1>상품 관리</h1>
+<hr>
+<!-- 
+	<table>
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>작성자</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="post : ${list}">
+				<th:block th:if="${post.uno == 0}">
+					<td th:text="${post.bno}"></td>
+					<td><a th:href="@{/boardDetail(bno=${post.bno})}">[[${post.title}]]</a></td>
+					<td th:text="${post.name}"></td>
+				</th:block>
+			</tr>
+		</tbody>
+	</table>
+	 -->
+</body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<div th:insert="~{common/commonHeader.html}" id="header"></div>
+<script type="text/javascript">
+    function validateForm() {
+        var adid = document.forms["loginForm"]["adid"].value;
+        var adpw = document.forms["loginForm"]["adpw"].value;
+        if (adid == "" || "adpw" == "") {
+            alert("아이디와 비밀번호를 모두 입력해주세요.");
+            return false;
+        }
+    }
+</script>
+<body>
+<h1>로그인</h1>
+<hr>
+<div>
+    <form name="loginForm" action="/admin/login" method="post" onsubmit="return validateForm()">
+       <table>
+		<tr>
+			<th>아이디</th>
+			<td><input type="text" name="adid" placeholder="아이디를 입력하세요" id="shortbox"></td>
+			<td></td>
+			<td><input type="submit" value="로그인"></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input type="password" name="adpw" placeholder="비밀번호를 입력하세요" id="shortbox"></td>
+			<td></td>
+		</tr>
+	</table>
+    </form>
+    <div th:if="${error}">
+        <p style="color:red;" th:text="${error}"></p>
+    </div>
+</div>
+</body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
+</html>

@@ -4,7 +4,41 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<div th:insert="~{member/memberHeader.html}" id="header"></div>
+<link rel="stylesheet" href="/css/memindexCss.css">
 <body>
 <h1>Member Index Page</h1>
+<hr>
+    <div>
+        <img src="" style="width:90%; height:350px; margin:10px; background-color:rgb(192, 192, 192)">
+    </div>
+    <div style="width: 80%; height: 100px; margin:20px; background-color: rgb(190, 190, 190);">
+        <h3>weekly</h3>
+        <h2>인기상품</h2>
+    </div>
+	<section id="main_image"></section>
+			<div id="main2">					
+				<ul class="item1">
+					<li><img src=""></li>
+					<li class="productName">상품이름</li>
+					<li class="price">30000</li>
+				</ul>
+				<ul class="item1">
+					<li><img src=""></li>
+					<li class="productName">상품이름</li>
+					<li class="price">30000</li>
+				</ul>
+				<ul class="item1">
+					<li><img src=""></li>
+					<li class="productName">상품이름</li>
+					<li class="price">30000</li>
+				</ul>
+				<ul class="item1">
+					<li><img src=""></li>
+					<li class="productName">상품이름</li>
+					<li class="price">30000</li>
+				</ul>
+			</div>
 </body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
 </html>

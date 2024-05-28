@@ -1,5 +1,7 @@
 package com.example.shopPrj001.domain;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,4 +33,7 @@ public class Member {
     
     private String memtel;
     private String mememail;
+    
+    @ColumnDefault("'ROLE_MEMBER'")
+    private String role;
 }

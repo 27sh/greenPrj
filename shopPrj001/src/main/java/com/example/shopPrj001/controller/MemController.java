@@ -93,6 +93,16 @@ public class MemController {
         return mav;
     }
 	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+
+	    session.invalidate();
+	    
+	    return "redirect:/";
+		
+	
+	}
+	
 	@RequestMapping("/index")
 	public String memberIndex() {
 		
