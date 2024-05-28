@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript">
+    function validateForm() {
+        var form = document.forms["regForm"];
+        
+        var memid = form["memid"].value.trim();
+        if (memid === "") {
+            alert("아이디를 입력해주세요.");
+            return false;
+        }
+        
+        var mempw = form["mempw"].value.trim();
+        if (mempw === "") {
+            alert("비밀번호 입력해주세요.");
+            return false;
+        }
+        
+        var memtel2 = form["memtel2"].value.trim();
+        if (memtel2 === "") {
+            alert("전화번호를 입력해주세요.");
+            return false;
+        }
+        
+        var mememail1 = form["mememail1"].value.trim();
+        if (mememail1 === "") {
+            alert("이메일을 입력해주세요.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<div th:insert="~{common/commonHeader.html}" id="header"></div>
+<body>
+
+    <form name="regForm" action="signUp" method="post" onsubmit="return validateForm()">
+           아이디 : <input type="text" name="memid" id="memid" size="50" placeholder="아이디를 입력하세요.">
+           <input type="button" name="memidCheck" value="아이디 중복체크" onclick="checkMemid()"><br>
+			<div id="demo"></div>
+           비밀번호 : <input type="password" name="mempw" size="50" id="password" placeholder="비밀번호를 입력하세요."><br>
+           비밀번호확인 : <input type="password" name="mempw2" size="50" id="confirmPassword" placeholder="비밀번호를 한 번 더 입력하세요."><br>
+           <div id="demo2" class="demo2"></div>
+           이름 : <input type="memname" name="memname" size="50" id="memname" placeholder="이름을 입력하세요."><br>
+           전화번호 : 
+                    <select name="memtel1">
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select>
+           <input type="text" name="memtel2" size="50" placeholder="전화번호를 입력하세요."><br>
+           이메일 : <input type="text" name="mememail1" size="20" placeholder="이메일을 입력하세요."> @
+                    <select name="mememail2">
+                        <option value="naver.com">naver.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="daum.net">daum.net</option>
+                        <!-- 직접 입력하기 -->
+                    </select><br>
+          <input type="submit" value="회원가입">
+    </form>
+</body>
+<script type="text/javascript">
+	function checkMemid() {
+	    const memidElement = document.querySelector("#memid");
+	    const memid = memidElement.value.trim();
+	    
+	    if (memid === "") {
+	        document.getElementById("demo").innerHTML = "아이디를 입력해주세요";
+	        return;
+	    }
+	    
+	    const xhttp = new XMLHttpRequest();
+	    xhttp.onload = function() {
+	        document.getElementById("demo").innerHTML = this.responseText;
+	    }
+	    xhttp.open("GET", "/mem/regMemidCheck?memid=" + encodeURIComponent(memid), true);
+	    xhttp.send();
+	}
+
+    
+    const password = document.querySelector("#password");
+    const confirmPassword = document.querySelector("#confirmPassword");
+    const msg = document.querySelector("#demo2");
+    password.addEventListener("input", function() {
+        if (password.value.trim() === confirmPassword.value.trim()) {
+            msg.textContent = "비밀번호가 일치합니다.";
+            msg.classList.remove("invalid");
+        } else {
+            msg.textContent = "비밀번호가 일치하지 않습니다.";
+            msg.classList.add("invalid");
+        }
+    });
+    confirmPassword.addEventListener("input", function() {
+        if (password.value.trim() === confirmPassword.value.trim()) {
+            msg.textContent = "비밀번호가 일치합니다.";
+            msg.classList.remove("invalid");
+        } else {
+            msg.textContent = "비밀번호가 일치하지 않습니다.";
+            msg.classList.add("invalid");
+        }
+    });
+</script>
+<div th:insert="~{common/footer.html}" id="footer"></div>
+</html>
