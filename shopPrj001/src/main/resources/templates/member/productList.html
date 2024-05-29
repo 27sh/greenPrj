@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품 목록</title>
+</head>
+<div th:insert="~{member/memberHeader.html}" id="header"></div>
+<body>
+<h1>상품 목록</h1>
+<hr>
+    <table>
+        <thead>
+            <tr>
+                <th>상품명</th>
+                <th>가격</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${productList}">
+                <td>
+                    <a th:href="@{/mem/product/detail/{pno}(pno=${product.pno})}" th:text="${product.pname}"></a>
+                </td>
+                <td th:text="${product.pprice}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
+</html>

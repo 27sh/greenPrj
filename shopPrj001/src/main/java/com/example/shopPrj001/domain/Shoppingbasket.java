@@ -1,11 +1,11 @@
 package com.example.shopPrj001.domain;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,19 +17,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Shoppingbasket {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long pno;
-	@NotNull
-	private String pname;
-	@NotNull
-	private String pprice;
-	@NotNull
-	private Long pamount;
+	private Long sbno;
 	
-	private String pintro;
+	@NotNull
+	private Long sbamount;
+	@NotNull
+	private Long sbprice;
 	
-	@ColumnDefault("0")
-	private Long psalesRate;
+	@ManyToOne
+    @JoinColumn(name = "pno")
+    private Product product;
+	
+	@ManyToOne
+    @JoinColumn(name = "memid")
+    private Member member;
 }

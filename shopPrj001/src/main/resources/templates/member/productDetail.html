@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품 상세보기</title>
+</head>
+<div th:insert="~{member/memberHeader.html}" id="header"></div>
+<body>
+<h1>상품 상세보기</h1>
+<hr>
+<img th:src="@{/images/{pname}.jpg(pname=${product.pname})}" alt="상품 이미지">
+<h2 th:text="${product.pname}"></h2>
+<table>
+    <tr>
+        <th>가격 : </th>
+        <td id="pprice" th:text="${product.pprice}"></td>
+    </tr>
+    <tr>
+        <th>수량 : </th>
+        <td th:text="${product.pamount}"></td>
+    </tr>
+    <tr>
+        <th>소개 : </th>
+        <td th:text="${product.pintro}"></td>
+    </tr>
+</table>
+<table border="1">
+    <tr>
+        <td>상품명</td>
+        <td>상품수</td>
+        <td>가격</td>
+    </tr>
+    <tr>
+        <td th:text="${product.pname}"></td>
+        <td>
+        <input type="number" id="productAmount" name="productAmount" value="1" min="1" max="100">
+        </td>
+        <td id="totalPrice1"></td>
+    </tr>
+</table>
+
+<!-- data-pno 속성에 상품 ID 저장 -->
+<div id="productData" th:data-pno="${product.pno}"></div>
+
+<div>총 상품금액 : </div>
+<h3 id="totalPrice3">원</h3>
+
+<button>바로 구매하기</button>
+<button id="addToBasket">장바구니</button>
+<button>관심상품</button>
+
+<script>
+    var productAmountInput = document.getElementById('productAmount');
+    var totalPriceCells = document.querySelectorAll('[id^="totalPrice"]');
+    var addToBasketButton = document.getElementById('addToBasket');
+    var productData = document.getElementById('productData');
+
+    productAmountInput.addEventListener('change', calculateTotalPrice);
+
+    function calculateTotalPrice() {
+        var productAmount = productAmountInput.value;
+        var unitPrice = parseInt(document.getElementById('pprice').textContent);
+        var totalPrice = unitPrice * productAmount;
+
+        totalPriceCells.forEach(function(cell) {
+            cell.textContent = totalPrice + ' 원';
+        });
+    }
+
+    addToBasketButton.addEventListener('click', function() {
+        var productAmount = productAmountInput.value;
+        var productId = productData.getAttribute('data-pno');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/basket/add-to-basket/' + productId, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert('상품이 장바구니에 추가되었습니다.');
+            }
+        };
+
+        var data = {
+            pno: productId,
+            sbamount: productAmount,
+            sbprice: parseInt(document.getElementById('totalPrice1').textContent)
+        };
+
+        xhr.send(JSON.stringify(data));
+    });
+
+    calculateTotalPrice();
+</script>
+</body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
+</html>

@@ -10,9 +10,13 @@ import com.example.shopPrj001.repository.ProductRepository;
 @Service
 public class ProductService {
 	private final ProductRepository productRepository;
-
+	
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+    
+    public List<Product> getTopProducts() {
+        return productRepository.findTop4ByOrderByPsalesRateDesc();
     }
 
     public List<Product> getAllProducts() {
@@ -30,5 +34,7 @@ public class ProductService {
     public void deleteProduct(Long pno) {
         productRepository.deleteById(pno);
     }
+    
+    
 
 }

@@ -1,5 +1,7 @@
 package com.example.shopPrj001.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.shopPrj001.domain.Member;
+import com.example.shopPrj001.domain.Product;
 import com.example.shopPrj001.repository.MemberRepository;
+import com.example.shopPrj001.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +33,12 @@ public class MemController {
 	
 	@Autowired
 	HttpServletResponse response;
+	
+    private final ProductService productService;
+
+    public MemController(ProductService productService) {
+        this.productService = productService;
+    }
 	
 	
 	@RequestMapping("/regForm")
@@ -108,5 +118,12 @@ public class MemController {
 		
 		return "member/memIndex.html";
 	}
+	
+    @GetMapping("/index")
+    public String memberIndex(Model model) {
+        List<Product> topProducts = productService.getTopProducts();
+        model.addAttribute("topProducts", topProducts);
+        return "member/memIndex.html";
+    }
 	
 }
