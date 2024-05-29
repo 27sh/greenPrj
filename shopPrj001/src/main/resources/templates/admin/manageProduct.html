@@ -8,26 +8,23 @@
 <body>
 <h1>상품 관리</h1>
 <hr>
-<!-- 
+<button onclick="location.href='/admin/products/add'">상품등록</button>
 	<table>
 		<thead>
 			<tr>
-				<th>번호</th>
-				<th>제목</th>
-				<th>작성자</th>
+				<th>상품명</th>
+				<th>가격</th>
+				<th>수량</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="post : ${list}">
-				<th:block th:if="${post.uno == 0}">
-					<td th:text="${post.bno}"></td>
-					<td><a th:href="@{/boardDetail(bno=${post.bno})}">[[${post.title}]]</a></td>
-					<td th:text="${post.name}"></td>
-				</th:block>
+			<tr th:each="list : ${productList}">
+				<td><a th:href="@{'/admin/products/edit/' + ${list.pno}}" th:text="${list.pname}"></a></td>
+				<td th:text="${list.pprice}"></td>
+				<td th:text="${list.pamount}"></td>
 			</tr>
 		</tbody>
 	</table>
-	 -->
 </body>
 <div th:insert="~{common/footer.html}" id="footer"></div>
 </html>

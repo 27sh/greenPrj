@@ -55,10 +55,4 @@ public class AdminController {
         return mav;
     }
 	
-	@RequestMapping("/manageP")
-	public String manage() {
-		
-		return "admin/manageProduct.html";
-	}
-	
 }

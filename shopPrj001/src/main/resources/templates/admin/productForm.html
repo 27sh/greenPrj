@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품 등록</title>
+</head>
+<body>
+<h1>상품 등록</h1>
+<form th:action="@{/admin/products/add}" method="post">
+    <div>
+        <label for="pname">상품명:</label>
+        <input type="text" id="pname" name="pname" required>
+    </div>
+    <div>
+        <label for="pprice">가격:</label>
+        <input type="text" id="pprice" name="pprice" required>
+    </div>
+    <div>
+        <label for="pamount">수량:</label>
+        <input type="number" id="pamount" name="pamount" required>
+    </div>
+    <div>
+        <label for="pintro">소개:</label>
+        <textarea id="pintro" name="pintro"></textarea>
+    </div>
+    <div>
+        <button type="submit">등록</button>
+    </div>
+</form>
+</body>
+</html>

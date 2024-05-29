@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품 수정</title>
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{/admin/products/update}" th:object="${product}" method="post">
+    <input type="hidden" th:field="*{pno}" />
+    <div>	
+        <label for="pname">상품명:</label>
+        <input type="text" id="pname" th:field="*{pname}" required>
+    </div>
+    <div>
+        <label for="pprice">가격:</label>
+        <input type="text" id="pprice" th:field="*{pprice}" required>
+    </div>
+    <div>
+        <label for="pamount">수량:</label>
+        <input type="number" id="pamount" th:field="*{pamount}" required>
+    </div>
+    <div>
+        <label for="pintro">소개:</label>
+        <textarea id="pintro" th:field="*{pintro}"></textarea>
+    </div>
+    <div>
+        <button type="submit">수정</button>
+    </div>
+    
+</form>
+
+<form th:action="@{/admin/products/delete/{pno}(pno=${product.pno})}" method="post" style="margin-top: 20px;">
+    <button type="submit" style="background-color: red; color: white;">삭제</button>
+</form>
+</body>
+</html>

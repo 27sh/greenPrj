@@ -2,9 +2,9 @@ package com.example.shopPrj001.domain;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,17 +18,17 @@ import lombok.NoArgsConstructor;
 public class Member {
     @Id
     private String memid;
-    @NonNull
+    @NotNull
     private String mempw;
-    @NonNull
+    @NotNull
     private String memname;
-    @NonNull
+    @NotNull
     private String memtel1;
-    @NonNull
+    @NotNull
     private String memtel2;
-    @NonNull
+    @NotNull
     private String mememail1;
-    @NonNull
+    @NotNull
     private String mememail2;
     
     private String memtel;
