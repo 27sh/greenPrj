@@ -31,28 +31,37 @@ public class ShoppingbasketController {
     private ProductRepository productRepository;
 
 	@PostMapping("/add-to-basket/{pno}")
-	public ResponseEntity<String> addToBasket(@PathVariable("pno") Long pno, HttpSession session,
-	                                          @RequestBody Map<String, Object> requestData) {
-	    Member member = (Member) session.getAttribute("member");
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addToBasket(@PathVariable("pno") Long pno, HttpSession session,
+                                                           @RequestBody Map<String, Object> requestData) {
+        Member member = (Member) session.getAttribute("member");
 
-	    if (member != null) {
-	        Product product = productRepository.findById(pno).orElse(null);
-	        if (product != null) {
-	            Shoppingbasket shoppingBasket = new Shoppingbasket();
-	            shoppingBasket.setMember(member);
-	            shoppingBasket.setProduct(product);
-	            shoppingBasket.setSbamount(Long.valueOf(requestData.get("sbamount").toString()));
-	            shoppingBasket.setSbprice(Long.valueOf(requestData.get("sbprice").toString()));
+        if (member != null) {
+            Product product = productRepository.findById(pno).orElse(null);
+            if (product != null) {
+                Shoppingbasket shoppingBasket = new Shoppingbasket();
+                shoppingBasket.setMember(member);
+                shoppingBasket.setProduct(product);
+                shoppingBasket.setSbamount(Long.valueOf(requestData.get("sbamount").toString()));
+                shoppingBasket.setSbprice(Long.valueOf(requestData.get("sbprice").toString()));
 
-	            shoppingBasketService.saveShoppingBasket(shoppingBasket);
-	            return ResponseEntity.ok("상품이 장바구니에 추가되었습니다.");
-	        } else {
-	            return ResponseEntity.status(404).body("상품을 찾을 수 없습니다.");
-	        }
-	    }
+                shoppingBasketService.saveShoppingBasket(shoppingBasket);
 
-	    return ResponseEntity.status(401).body("로그인이 필요합니다.");
-	}
+                // 성공적인 응답 데이터 생성
+                Map<String, Object> response = Map.of(
+                    "pname", product.getPname(),
+                    "sbamount", shoppingBasket.getSbamount(),
+                    "sbprice", shoppingBasket.getSbprice()
+                );
+
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(404).body(Map.of("error", "상품을 찾을 수 없습니다."));
+            }
+        }
+
+        return ResponseEntity.status(401).body(Map.of("error", "로그인이 필요합니다."));
+    }
 	
     @DeleteMapping("/deleteProduct/{pno}")
     @ResponseBody

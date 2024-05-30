@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{member/memberHeader.html}" id="header"></div>
 <head>
 <meta charset="UTF-8">
 <title>장바구니</title>
@@ -12,6 +13,7 @@
                 type: 'DELETE',
                 success: function(result) {
                     $(row).closest('tr').remove();
+                    updateTotalPrices();
                 },
                 error: function(err) {
                     alert('상품 삭제 중 오류가 발생했습니다.');
@@ -19,6 +21,53 @@
             });
         }
     }
+
+    function calculateTotalPrice(row) {
+        var amountInput = $(row).find('input[name="productAmount"]');
+        var unitPrice = parseInt($(row).find('.unitPrice').text());
+        var amount = parseInt(amountInput.val());
+        var totalPrice = unitPrice * amount;
+        $(row).find('.totalPrice').text(totalPrice + ' 원');
+        updateTotalPrices();
+    }
+
+    function updateTotalPrices() {
+        var totalPriceSum = 0;
+        $('.totalPrice').each(function() {
+            var row = $(this).closest('tr');
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var priceText = $(this).text().replace(' 원', '');
+                totalPriceSum += parseInt(priceText);
+            }
+        });
+        var deliveryFee = 3000;
+        var finalPrice = totalPriceSum + deliveryFee;
+
+        $('#totalPriceSum').text(totalPriceSum + ' 원');
+        $('#finalPrice').text(finalPrice + ' 원');
+    }
+
+    $(document).ready(function() {
+        $('input[name="productAmount"]').each(function() {
+            calculateTotalPrice($(this).closest('tr'));
+        });
+
+        $('input[name="productAmount"]').on('change', function() {
+            calculateTotalPrice($(this).closest('tr'));
+        });
+
+        $('input[type="checkbox"]').on('change', function() {
+            updateTotalPrices();
+        });
+
+        $('#selectAll').on('change', function() {
+            var isChecked = $(this).is(':checked');
+            $('input[type="checkbox"]').prop('checked', isChecked);
+            updateTotalPrices();
+        });
+
+        updateTotalPrices();
+    });
 </script>
 </head>
 <body>
@@ -27,17 +76,27 @@
 <table>
     <thead>
         <tr>
+            <th><input type="checkbox" id="selectAll" checked></th>
             <th>이미지</th>
             <th>상품정보</th>
+            <th>수량</th>
             <th>합계</th>
             <th>선택</th>
         </tr>
     </thead>
     <tbody>
         <tr th:each="item : ${basketItems}">
+            <td><input type="checkbox" class="itemCheckbox" checked></td>
             <td><img th:src="@{'/images/' + ${item.product.pname} + '.jpg'}" alt="상품 이미지"></td>
             <td th:text="${item.product.pname}"></td>
-            <td th:text="${item.product.pprice} + ' 원'"></td>
+            <td>
+                <input type="number" name="productAmount" th:value="${item.sbamount}" min="1" max="100">
+            </td>
+            <td>
+                <span class="unitPrice" th:text="${item.product.pprice}"></span> 원
+                <br>
+                <span class="totalPrice"></span>
+            </td>
             <td>
                 <button th:onclick="'orderProduct(' + ${item.product.pno} + ')'">주문하기</button>
                 <br>
@@ -46,5 +105,26 @@
         </tr>
     </tbody>
 </table>
+
+<table>
+    <thead>
+        <tr>
+            <td>총 상품금액</td>
+            <td>총 배송비</td>
+            <td>결제예정금액</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td id="totalPriceSum"></td>
+            <td>3000 원</td>
+            <td id="finalPrice"></td>
+        </tr>
+    </tbody>
+</table>
+
+<button>전체상품주문</button>
+<button>선택상품주문</button>
 </body>
+<div th:insert="~{common/footer.html}" id="footer"></div>
 </html>
