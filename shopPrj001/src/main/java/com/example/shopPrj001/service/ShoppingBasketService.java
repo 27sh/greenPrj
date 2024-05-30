@@ -30,4 +30,12 @@ public class ShoppingBasketService {
     public List<Shoppingbasket> getAllProducts() {
         return shoppingBasketRepository.findAll();
     }
+    
+    public List<Shoppingbasket> getAllProductsByMemberId(String memid) {
+        return shoppingBasketRepository.findByMemberMemid(memid);
+    }
+    
+    public void deleteProductByPno(Long pno) {
+        shoppingBasketRepository.deleteById(pno);
+    }
 }

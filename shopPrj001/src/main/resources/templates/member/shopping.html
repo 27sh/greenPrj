@@ -1,8 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>장바구니</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    function deleteProduct(pno, row) {
+        if (confirm('장바구니에서 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/basket/deleteProduct/' + pno,
+                type: 'DELETE',
+                success: function(result) {
+                    $(row).closest('tr').remove();
+                },
+                error: function(err) {
+                    alert('상품 삭제 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    }
+</script>
 </head>
 <body>
 <h1>장바구니 목록</h1>
@@ -18,13 +35,13 @@
     </thead>
     <tbody>
         <tr th:each="item : ${basketItems}">
-            <td><img th:src="@{/images/ + ${item.product.pname} + '.jpg'}" alt="상품 이미지"></td>
+            <td><img th:src="@{'/images/' + ${item.product.pname} + '.jpg'}" alt="상품 이미지"></td>
             <td th:text="${item.product.pname}"></td>
             <td th:text="${item.product.pprice} + ' 원'"></td>
             <td>
-                <button th:attr="onclick='orderProduct(' + ${item.product.pno} + ')'">주문하기</button>
+                <button th:onclick="'orderProduct(' + ${item.product.pno} + ')'">주문하기</button>
                 <br>
-                <button th:attr="onclick='deleteProduct(' + ${item.product.pno} + ')'">삭제</button>
+                <button th:onclick="'deleteProduct(' + ${item.product.pno} + ', this)'">삭제</button>
             </td>
         </tr>
     </tbody>
