@@ -28,7 +28,7 @@ public class ShoppingbasketController {
     private ShoppingBasketService shoppingBasketService;
 	
 	@Autowired
-    private ProductRepository productRepository;
+    private ProductRepository productRepository;	
 
 	@PostMapping("/add-to-basket/{pno}")
     @ResponseBody

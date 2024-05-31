@@ -6,68 +6,93 @@
 <title>장바구니</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-    function deleteProduct(pno, row) {
-        if (confirm('장바구니에서 삭제하시겠습니까?')) {
-            $.ajax({
-                url: '/basket/deleteProduct/' + pno,
-                type: 'DELETE',
-                success: function(result) {
-                    $(row).closest('tr').remove();
-                    updateTotalPrices();
-                },
-                error: function(err) {
-                    alert('상품 삭제 중 오류가 발생했습니다.');
-                }
-            });
-        }
-    }
-
-    function calculateTotalPrice(row) {
-        var amountInput = $(row).find('input[name="productAmount"]');
-        var unitPrice = parseInt($(row).find('.unitPrice').text());
-        var amount = parseInt(amountInput.val());
-        var totalPrice = unitPrice * amount;
-        $(row).find('.totalPrice').text(totalPrice + ' 원');
-        updateTotalPrices();
-    }
-
-    function updateTotalPrices() {
-        var totalPriceSum = 0;
-        $('.totalPrice').each(function() {
-            var row = $(this).closest('tr');
-            if (row.find('input[type="checkbox"]').is(':checked')) {
-                var priceText = $(this).text().replace(' 원', '');
-                totalPriceSum += parseInt(priceText);
+function deleteProduct(pno, row) {
+    if (confirm('장바구니에서 삭제하시겠습니까?')) {
+        $.ajax({
+            url: '/basket/deleteProduct/' + pno,
+            type: 'DELETE',
+            success: function(result) {
+                $(row).closest('tr').remove();
+                updateTotalPrices();
+            },
+            error: function(err) {
+                alert('상품 삭제 중 오류가 발생했습니다.');
             }
         });
-        var deliveryFee = 3000;
-        var finalPrice = totalPriceSum + deliveryFee;
-
-        $('#totalPriceSum').text(totalPriceSum + ' 원');
-        $('#finalPrice').text(finalPrice + ' 원');
     }
+}
 
-    $(document).ready(function() {
-        $('input[name="productAmount"]').each(function() {
-            calculateTotalPrice($(this).closest('tr'));
-        });
+function calculateTotalPrice(row) {
+    var amountInput = $(row).find('input[name="productAmount"]');
+    var unitPrice = parseInt($(row).find('.unitPrice').text());
+    var amount = parseInt(amountInput.val());
+    var totalPrice = unitPrice * amount;
+    $(row).find('.totalPrice').text(totalPrice + ' 원');
+    updateTotalPrices();
+}
 
-        $('input[name="productAmount"]').on('change', function() {
-            calculateTotalPrice($(this).closest('tr'));
-        });
+function updateTotalPrices() {
+    var totalPriceSum = 0;
+    $('.totalPrice').each(function() {
+        var row = $(this).closest('tr');
+        if (row.find('input[type="checkbox"]').is(':checked')) {
+            var priceText = $(this).text().replace(' 원', '');
+            totalPriceSum += parseInt(priceText);
+        }
+    });
+    var deliveryFee = 3000;
+    var finalPrice = totalPriceSum + deliveryFee;
 
-        $('input[type="checkbox"]').on('change', function() {
-            updateTotalPrices();
-        });
+    $('#totalPriceSum').text(totalPriceSum + ' 원');
+    $('#finalPrice').text(finalPrice + ' 원');
+}
 
-        $('#selectAll').on('change', function() {
-            var isChecked = $(this).is(':checked');
-            $('input[type="checkbox"]').prop('checked', isChecked);
-            updateTotalPrices();
-        });
+function getSelectedItems() {
+    var selectedItems = [];
+    $('tbody tr').each(function() {
+        if ($(this).find('input[type="checkbox"]').is(':checked')) {
+            var item = {
+                sbno: $(this).find('.sbno').val(),
+                pname: $(this).find('td[th\\:text="${item.product.pname}"]').text(),
+                amount: $(this).find('input[name="productAmount"]').val(),
+                price: $(this).find('.unitPrice').text(),
+                totalPrice: $(this).find('.totalPrice').text()
+            };
+            selectedItems.push(item);
+        }
+    });
+    return selectedItems;
+}
 
+function orderAllProducts() {
+    var selectedItems = getSelectedItems();
+    localStorage.setItem('orderItems', JSON.stringify(selectedItems));
+    window.location.href = '/order/orderForm';
+}
+
+$(document).ready(function() {
+    $('input[name="productAmount"]').each(function() {
+        calculateTotalPrice($(this).closest('tr'));
+    });
+
+    $('input[name="productAmount"]').on('change', function() {
+        calculateTotalPrice($(this).closest('tr'));
+    });
+
+    $('input[type="checkbox"]').on('change', function() {
         updateTotalPrices();
     });
+
+    $('#selectAll').on('change', function() {
+        var isChecked = $(this).is(':checked');
+        $('input[type="checkbox"]').prop('checked', isChecked);
+        updateTotalPrices();
+    });
+
+    updateTotalPrices();
+    
+    $('#orderAllProductsBtn').on('click', orderAllProducts);
+});
 </script>
 </head>
 <body>
@@ -123,7 +148,7 @@
     </tbody>
 </table>
 
-<button>전체상품주문</button>
+<button id="orderAllProductsBtn">전체상품주문</button>
 <button>선택상품주문</button>
 </body>
 <div th:insert="~{common/footer.html}" id="footer"></div>
